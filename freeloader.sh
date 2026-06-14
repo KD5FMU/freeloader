@@ -1,6 +1,3 @@
-cd /etc/asterisk/local
-
-sudo tee freeloader.sh > /dev/null << 'EOF'
 #!/bin/bash
 # ================================================
 # Freeloader Installer for Supermon
