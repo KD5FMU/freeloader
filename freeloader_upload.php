@@ -21,7 +21,7 @@ if (!isset($_FILES['file'])) { echo "No file uploaded."; exit;
 }
 $file = $_FILES['file']; $filename = basename($file['name']); if (preg_match('/(\.\.|\/|\\\\|%00)/', $filename)) { echo "Invalid filename."; exit;
 }
-if ($file['size'] > 200 * 1024 * 1024) { echo "âŒ File too large (max 200MB)."; exit;
+if ($file['size'] > 200 * 1024 * 1024) { echo " File too large (max 200MB)."; exit;
 }
 $target_dir = "/my_uploads/"; $target_file = $target_dir . $filename; if (move_uploaded_file($file['tmp_name'], $target_file)) { chmod($target_file, 0664); @chown($target_file, 'www-data'); 
     echo "<strong>" . htmlspecialchars($filename) . "</strong> uploaded successfully to /my_uploads";
