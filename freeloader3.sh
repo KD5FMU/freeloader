@@ -97,7 +97,7 @@ else
         print
         if (getline > 0) {
             if ($0 ~ /^[[:space:]]*<SCRIPT>/) {
-                print "<?php include_once \"custom/freeloader.inc\"; ?>"
+                print "<?php include_once \"custom/freeloader.inc\"; ?><br><br>"
             }
             print
         }
