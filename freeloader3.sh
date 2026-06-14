@@ -1,4 +1,4 @@
-```bash
+
 #!/bin/bash
 # ================================================
 # Freeloader Installer for Supermon
@@ -166,4 +166,4 @@ echo "     <SCRIPT> tag in footer.inc"
 echo "  3. Test uploading a file"
 echo
 echo "=================================================="
-```
+
