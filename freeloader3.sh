@@ -1,4 +1,4 @@
-```bash
+
 #!/bin/bash
 # ================================================
 # Freeloader Installer for Supermon
@@ -122,4 +122,4 @@ echo "  3. Test uploading a file"
 echo
 echo "Installer completed successfully."
 echo "=================================================="
-```
+
