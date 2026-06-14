@@ -1,12 +1,8 @@
-cd /var/www/html/supermon/custom
-
-
-sudo tee freeloader.inc > /dev/null << 'EOF'
 
 <?php
 
 // freeloader.inc
-
+// file upload utility that frees the use from SSH or SFTP
 // N5AD - June 2026
 
 ?>
