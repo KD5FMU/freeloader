@@ -5,21 +5,21 @@
 # Created by N5AD - June 2026
 # ================================================
 
-set -e
+set -e  # Exit on error
 
 echo "=================================================="
 echo "🚀 Starting Freeloader Installer"
 echo "=================================================="
 
-# STEP 1. Update package list
+# STEP 1. Update system packages
 echo "Step 1: Updating package list..."
 apt-get update -qq
 
-# STEP 2. Install git if needed
+# STEP 2. Install git if missing
 echo "Step 2: Installing git if needed..."
 apt-get install -y git
 
-# STEP 3. Get latest files from GitHub
+# STEP 3. Clone or pull latest from GitHub
 echo "Step 3: Getting latest files from n5ad/freeloader..."
 if [ -d "/tmp/freeloader" ]; then
     echo "Updating existing repository..."
@@ -67,63 +67,15 @@ sudo chown www-data:www-data /var/www/html/supermon/custom/freeloader/*.php
 sudo chmod 644 /var/www/html/supermon/custom/freeloader/*.php
 echo "✅ Backend files installed"
 
-# STEP 8. Smart patch footer.inc
-echo "Step 8: Adding Freeloader to footer.inc"
-FOOTER_INC="/var/www/html/supermon/footer.inc"
-BACKUP_SUFFIX=".bak.$(date +%Y%m%d-%H%M%S)"
-
-if [ ! -f "$FOOTER_INC" ]; then
-    echo " → footer.inc not found → skipping"
-else
-    BACKUP_FOOTER="${FOOTER_INC}${BACKUP_SUFFIX}"
-    cp -v "$FOOTER_INC" "$BACKUP_FOOTER"
-    echo "Backup of footer.inc created: $BACKUP_FOOTER"
-
-    if grep -q 'freeloader\.inc' "$FOOTER_INC"; then
-        echo "Freeloader include already present → skipping"
-    else
-        echo "Patching footer.inc to add Freeloader..."
-        awk '
-        # Look for the start of the logged-in block
-        /if \(\$_SESSION\['"'"'sm61loggedin'"'"'\] === true\) \{/ {
-            print
-            inblock = 1
-            next
-        }
-        # If announcement.inc is present, add after it
-        inblock && /include.*announcement\.inc/ {
-            print
-            print "<?php include(\"custom/freeloader.inc\"); ?>"
-            inblock = 0
-            next
-        }
-        # If no announcement.inc, add right after the closing ?> of the session block
-        inblock && /^\s*\?>\s*$/ {
-            print
-            print "<?php include(\"custom/freeloader.inc\"); ?>"
-            inblock = 0
-            next
-        }
-        { print }
-        ' "$FOOTER_INC" > "$FOOTER_INC.tmp" && mv "$FOOTER_INC.tmp" "$FOOTER_INC"
-        echo "✅ footer.inc patched successfully (Freeloader include added)."
-    fi
-
-    chown www-data:www-data "$FOOTER_INC" 2>/dev/null || true
-    chmod 644 "$FOOTER_INC" 2>/dev/null || true
-fi
-
 echo ""
 echo "=================================================="
 echo "✅ Freeloader installation completed successfully!"
 echo ""
 echo "Next steps:"
-echo "1. Hard refresh Supermon (Ctrl + Shift + R)"
-echo "2. Test uploading a file"
+echo "1. Add this line to your Supermon page (near announcement_manager):"
+echo "   <?php include('custom/freeloader.inc'); ?>"
+echo "2. Hard refresh Supermon (Ctrl + Shift + R)"
+echo "3. Test uploading a file"
 echo ""
 echo "Installer location: /etc/asterisk/local/freeloader.sh"
 echo "=================================================="
-EOF
-
-sudo chmod +x freeloader.sh
-echo "✅ Updated freeloader.sh installer created in /etc/asterisk/local"
