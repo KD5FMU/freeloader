@@ -73,6 +73,7 @@ cp /tmp/freeloader/freeloader_delete.php /var/www/html/supermon/custom/freeloade
 chown www-data:www-data /var/www/html/supermon/custom/freeloader/*.php
 chmod 644 /var/www/html/supermon/custom/freeloader/*.php
 
+```bash
 # STEP 8: Insert include into footer.inc
 echo "Step 8: Updating footer.inc..."
 
@@ -88,21 +89,16 @@ if grep -qF '<?php include_once "custom/freeloader.inc"; ?>' "$FOOTER_FILE"; the
     echo "✅ freeloader.inc include already exists. Skipping."
 else
     BACKUP_FILE="${FOOTER_FILE}${BACKUP_SUFFIX}"
-
-    cp -v "$FOOTER_FILE" "$BACKUP_FILE"
-    echo "Backup created: $BACKUP_FILE"
+    cp "$FOOTER_FILE" "$BACKUP_FILE"
 
     awk '
-    /<br><br>[[:space:]]*$/ {
-        print
-        if (getline > 0) {
-            if ($0 ~ /^[[:space:]]*<SCRIPT>/) {
-                print "<?php include_once \"custom/freeloader.inc\"; ?><br><br>"
-            }
-            print
-        }
-        next
+    BEGIN { inserted=0 }
+
+    /^[[:space:]]*<SCRIPT>/ && inserted==0 {
+        print "<?php include_once \"custom/freeloader.inc\"; ?>"
+        inserted=1
     }
+
     { print }
     ' "$BACKUP_FILE" > "$FOOTER_FILE"
 
@@ -110,6 +106,7 @@ else
 
     echo "✅ Inserted freeloader.inc include into footer.inc"
 fi
+```
 
 echo
 echo "=================================================="
