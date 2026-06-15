@@ -1,14 +1,13 @@
 <?php
-/*
- * freeloader_upload.php
- *
- * Freeloader Upload + File Listing Utility
- * Uploads any file to /my_uploads
- *
- * Created by James (N5AD)
- * June 2026
- */
 
+ // freeloader_upload.php
+ // Freeloader Upload + File Listing Utility
+ // Uploads any file to /my_uploads
+ 
+ // Created by James (N5AD)
+ // June 2026
+?>
+<?php
 // ==========================================================
 // File Listing
 // ==========================================================
