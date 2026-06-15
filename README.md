@@ -30,5 +30,6 @@ sudo bash freeloader.sh
 
 <img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/7b378cb1-97cb-4eee-a1c1-8d3bc885d419" />
 
+<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/67e8b4e3-53dd-4b6a-aa56-afc50456c7ee" />
 
 
