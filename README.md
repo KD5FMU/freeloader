@@ -28,4 +28,5 @@ Then lets run the script using
 sudo bash freeloader.sh
 ```
 
-<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/92b5e575-7fd5-4744-976a-ad1a43f376dc" />
+
+<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/16220077-19d9-4e58-bf36-79fc9fb4ab53" />
