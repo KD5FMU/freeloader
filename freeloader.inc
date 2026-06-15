@@ -96,7 +96,7 @@ setInterval(loadFreeloaderFiles, 20000);
         border: 1px solid #ddd;
     }
     #freeloader_filelist th {
-        background: #2c3e50;      /* Dark header you liked */
+        background: #2c3e50;     
         color: white;
     }
     #freeloader_filelist tr:nth-child(even) {
