@@ -68,8 +68,7 @@ echo "Step 5: Creating freeloader directory..."
 
 mkdir -p /var/www/html/supermon/custom/freeloader
 
-chown -R www-data:www-data \
-    /var/www/html/supermon/custom/freeloader
+chown -R www-data:www-data /var/www/html/supermon/custom/freeloader
 
 # ------------------------------------------------
 # Step 6 - Install freeloader.inc
