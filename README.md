@@ -1,3 +1,8 @@
+<img width="1081" height="383" alt="image" src="https://github.com/user-attachments/assets/3ff2a9ea-8fb3-4c03-8a81-cf6816361514" />
+
+
+
+
 This is an upload utilty called freeloader because it frees the user from having to use SSH or SFTP to upload files to your node for use.
 Here is how to install it:
 first lets get to s specific directory after you after started an SSH session into your node or from the terminal CLI if you like. 
@@ -28,6 +33,6 @@ Then lets run the script using
 sudo bash freeloader.sh
 ```
 
-<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/67e8b4e3-53dd-4b6a-aa56-afc50456c7ee" />
+
 
 
