@@ -66,33 +66,33 @@ echo " /my_uploads ready"
 # ------------------------------------------------
 echo "Step 5: Creating freeloader directory..."
 
-mkdir -p /var/www/html/supermon/custom/freeloader
+mkdir -p /var/www/html/freeloader
 
-chown -R www-data:www-data /var/www/html/supermon/custom/freeloader
+chown -R www-data:www-data /var/www/html/freeloader
 
 # ------------------------------------------------
 # Step 6 - Install freeloader.inc
 # ------------------------------------------------
 echo "Step 6: Installing freeloader.inc..."
 
-cp /tmp/freeloader/freeloader.inc /var/www/html/supermon/custom/
+cp /tmp/freeloader/freeloader.inc /var/www/html/freeloader/
 
-chown www-data:www-data /var/www/html/supermon/custom/freeloader.inc
+chown www-data:www-data /var/www/html/freeloader/freeloader.inc
 
-chmod 644 /var/www/html/supermon/custom/freeloader.inc
+chmod 644 /var/www/html/freeloader/freeloader.inc
 
 # ------------------------------------------------
 # Step 7 - Install PHP backend files
 # ------------------------------------------------
 echo "Step 7: Installing backend PHP files..."
 
-cp /tmp/freeloader/freeloader_upload.php /var/www/html/supermon/custom/freeloader/
+cp /tmp/freeloader/freeloader_upload.php /var/www/html/freeloader/
 
-cp /tmp/freeloader/freeloader_delete.php /var/www/html/supermon/custom/freeloader/
+cp /tmp/freeloader/freeloader_delete.php /var/www/html/freeloader/
 
-chown www-data:www-data /var/www/html/supermon/custom/freeloader/*.php
+chown www-data:www-data /var/www/html/freeloader/*.php
 
-chmod 644 /var/www/html/supermon/custom/freeloader/*.php
+chmod 644 /var/www/html/freeloader/*.php
 
 # ------------------------------------------------
 # Step 8 - Modify footer.inc (idempotent)
@@ -109,7 +109,7 @@ if [ ! -f "$FOOTER_FILE" ]; then
     exit 1
 fi
 
-if grep -qF '<?php include_once "custom/freeloader.inc"; ?>' "$FOOTER_FILE"; then
+if grep -qF '<?php include_once "/var/www/html/freeloader/freeloader.inc"; ?>' "$FOOTER_FILE"; then
 
     echo " freeloader.inc already present."
 
@@ -126,7 +126,7 @@ else
     }
 
     /^[[:space:]]*<SCRIPT>/ && inserted == 0 {
-        print "<?php include_once \"custom/freeloader.inc\"; ?>"
+        print "<?php include_once \"/var/www/html/freeloader/freeloader.inc\"; ?>"
         print "<br><br>"
         inserted = 1
     }
