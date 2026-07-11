@@ -143,7 +143,30 @@ else
     echo " freeloader.inc inserted successfully."
 
 fi
+# STEP X. Setup Apache Basic Auth for Freeloader
+echo_step "X. Setting up Apache password protection for Freeloader"
 
+FREELoader_DIR="/var/www/html/freeloader"
+
+if [ ! -d "$FREELoader_DIR" ]; then
+    echo "Freeloader directory not found. Skipping auth setup."
+else
+    # Create .htaccess
+    cat > "$FREELoader_DIR/.htaccess" << 'EOF'
+AuthType Basic
+AuthName "Freeloader - Restricted Access"
+AuthUserFile /var/www/html/freeloader/.htpasswd
+Require valid-user
+EOF
+
+    # Set permissions
+    chown www-data:www-data "$FREELoader_DIR/.htaccess"
+    chmod 644 "$FREELoader_DIR/.htaccess"
+
+    echo "✅ .htaccess created successfully."
+    echo ""
+   
+fi
 # ------------------------------------------------
 # Finished
 # ------------------------------------------------
