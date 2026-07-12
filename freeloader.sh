@@ -63,7 +63,6 @@ cp /tmp/freeloader/freeloader_delete.php /var/www/html/freeloader/
 chown www-data:www-data /var/www/html/freeloader/*
 chmod 644 /var/www/html/freeloader/*
 # ------------------------------------------------
-# ------------------------------------------------
 # Step 7 - Secure Config File + Password Prompt
 # ------------------------------------------------
 echo "Step 7: Creating secure password configuration..."
@@ -79,15 +78,13 @@ if [ "$FREELoader_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
     echo "❌ Passwords do not match. Please run the installer again."
     exit 1
 fi
-
-cat > /etc/freeloader/.config.php << 'EOF'
+cat > /etc/freeloader/.config.php << EOF
 <?php
 // Secure password file for Freeloader
 // Do not put this file in the web directory
-$FREELoader_PASSWORD = '$FREELoader_PASSWORD';
+\$FREELoader_PASSWORD = '$FREELoader_PASSWORD';
 ?>
 EOF
-
 chmod 644 /etc/freeloader/.config.php
 chown root:root /etc/freeloader/.config.php
 echo "✅ Secure config file created."
@@ -96,7 +93,6 @@ echo "✅ Secure config file created."
 # ------------------------------------------------
 echo "Restarting Apache2..."
 systemctl restart apache2
-
 # ------------------------------------------------
 # Add Sudoers Rule for www-data (upload + delete)
 # ------------------------------------------------
@@ -106,11 +102,10 @@ www-data ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/mkdir, /bin/chown, /bin/chmo
 EOF
 sudo chmod 0440 /etc/sudoers.d/99-freeloader
 echo "Sudoers rule added successfully."
-
 echo
 echo "=================================================="
 echo " Freeloader installation completed successfully!"
 echo " I hope you find this tool useful!"
-echo  " 73 N5AD "
+echo " 73 N5AD "
 echo " Your password is stored securely in /etc/freeloader/.config.php"
 echo "=================================================="
