@@ -111,6 +111,6 @@ echo
 echo "=================================================="
 echo " Freeloader installation completed successfully!"
 echo " I hope you find this tool useful!"
-echo  " 73 N5AD
+echo  " 73 N5AD "
 echo " Your password is stored securely in /etc/freeloader/.config.php"
 echo "=================================================="
