@@ -1,7 +1,6 @@
 <?php
 // freeloader_delete.php
-// File deletion utility for Freeloader
-// Supports any target directory + confirmation
+// Supports sudo rm for system directories
 // N5AD - July 2026
 ?>
 
@@ -21,19 +20,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['file'])) {
         echo "File not found: " . htmlspecialchars($filename);
         exit;
     }
-   
-    // Optional: Extra server-side safety check (e.g. prevent deleting certain critical files)
-    if (strpos($targetDir, '/etc') === 0 || strpos($targetDir, '/bin') === 0) {
-        echo "Safety block: Cannot delete files from system directories.";
-        exit;
-    }
-   
-    if (unlink($path)) {
-        echo htmlspecialchars($filename) . " was successfully deleted from " . htmlspecialchars($targetDir);
+
+    // Use sudo rm for system directories
+    if (strpos($targetDir, '/etc/') === 0 || strpos($targetDir, '/var/www/html/supermon') === 0) {
+        $cmd = "sudo rm -f " . escapeshellarg($path);
+        exec($cmd, $output, $returnCode);
+        
+        if ($returnCode === 0) {
+            echo htmlspecialchars($filename) . " deleted successfully from " . htmlspecialchars($targetDir);
+        } else {
+            echo "Failed to delete " . htmlspecialchars($filename) . " (sudo rm failed)";
+        }
     } else {
-        echo "Failed to delete " . htmlspecialchars($filename) . " (permission error?)";
+        // Normal delete for user directories
+        if (unlink($path)) {
+            echo htmlspecialchars($filename) . " deleted successfully from " . htmlspecialchars($targetDir);
+        } else {
+            echo "Failed to delete " . htmlspecialchars($filename);
+        }
     }
 } else {
     echo "Invalid request.";
 }
-?>
+y
+    
