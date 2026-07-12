@@ -172,7 +172,7 @@ window.deleteFreeloaderFile = function(filename) {
 
     if (isSystemDir) {
 
-        message = "âš ï¸ WARNING: This is a SYSTEM directory!\n\n" +
+        message = "WARNING: This is a SYSTEM directory!\n\n" +
 
                   "Are you ABSOLUTELY sure you want to delete " + filename + "?";
 
