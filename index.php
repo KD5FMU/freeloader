@@ -97,7 +97,7 @@ if (isset($_GET['logout'])) {
 
         body { font-family: Arial, sans-serif; margin:0; padding:20px; background:#f4f4f4; }
 
-        .container { max-width: 1600px; margin:0 auto; background:white; padding:25px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+        .container { max-width: 60%; margin:0 auto; background:white; padding:25px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
 
         .logout { float:right; color:#e74c3c; text-decoration:none; }
 
