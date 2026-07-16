@@ -1,7 +1,6 @@
 <?php
 // freeloader_upload.php
 // Freeloader Upload + File Listing + Download Utility
-// Uses sudo cp for system directories (with warning)
 // N5AD - July 2026
 ?>
 <?php
@@ -50,9 +49,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'list') {
     exit;
 }
 
-// ==========================================================
-// Upload Handler with sudo support
-// ==========================================================
 if (!isset($_FILES['file'])) {
     echo "No file uploaded.";
     exit;
@@ -88,7 +84,6 @@ if (!is_dir($targetDir)) {
 $targetFile = $targetDir . '/' . $filename;
 $tmpFile = $file['tmp_name'];
 
-// Use sudo cp for system directories, normal move for user dirs
 if (strpos($targetDir, '/etc/') === 0 || strpos($targetDir, '/usr/') === 0) {
     echo "<strong>Warning:</strong> Writing to system directory.<br>";
     $cmd = "sudo cp " . escapeshellarg($tmpFile) . " " . escapeshellarg($targetFile);
@@ -101,7 +96,7 @@ if (strpos($targetDir, '/etc/') === 0 || strpos($targetDir, '/usr/') === 0) {
         echo "Failed to copy file.";
     }
 } else {
-    // Normal user directory
+   
     if (move_uploaded_file($tmpFile, $targetFile)) {
         chmod($targetFile, 0664);
         @chown($targetFile, 'www-data');
