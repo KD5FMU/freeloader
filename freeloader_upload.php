@@ -65,6 +65,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'list') {
 
     foreach ($files as $f) {
         if ($f === '.' || $f === '..') continue;
+        // Hide dotfiles (.htaccess, .htpasswd, .git, etc.)
+        if (isset($f[0]) && $f[0] === '.') continue;
         $full = $uploadDir . '/' . $f;
         if (is_dir($full)) continue;
 
