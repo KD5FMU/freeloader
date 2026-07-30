@@ -49,13 +49,7 @@ function freeloader_allowed_dirs(): array {
 }
 
 
-/**
 
- * Resolve and validate a user-supplied directory against the whitelist.
-
- * Returns the realpath string or false on failure.
-
- */
 
 function freeloader_validate_dir(string $input): string|false {
 
@@ -102,11 +96,7 @@ function freeloader_validate_dir(string $input): string|false {
 }
 
 
-/**
 
- * Validate a filename (no path components).
-
- */
 
 function freeloader_validate_filename(string $name): string|false {
 
@@ -131,11 +121,7 @@ function freeloader_validate_filename(string $name): string|false {
 }
 
 
-/**
 
- * Require a valid logged-in session. Dies with 403 if not.
-
- */
 
 function freeloader_require_auth(): void {
 
@@ -153,7 +139,7 @@ function freeloader_require_auth(): void {
 
     }
 
-    // Sliding timeout (30 minutes)
+    
 
     $timeout = 1800;
 
@@ -174,11 +160,7 @@ function freeloader_require_auth(): void {
 }
 
 
-/**
 
- * CSRF token helpers
-
- */
 
 function freeloader_csrf_token(): string {
 
@@ -206,11 +188,7 @@ function freeloader_verify_csrf(?string $token): bool {
 }
 
 
-/**
 
- * Call the restricted helper. Returns [success: bool, output: string]
-
- */
 
 function freeloader_helper(string $command, array $args = []): array {
 
@@ -223,7 +201,7 @@ function freeloader_helper(string $command, array $args = []): array {
     }
 
 
-    // Must run via sudo — sudoers allows only this binary for www-data
+    
 
     $cmd = 'sudo ' . escapeshellarg($helper) . ' ' . escapeshellarg($command);
 
