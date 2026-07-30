@@ -117,9 +117,9 @@ systemctl restart apache2
 # ------------------------------------------------
 # Add Sudoers Rule for www-data (upload + delete + edit/read)
 # ------------------------------------------------
-echo "Adding sudoers rule for www-data (upload, delete, edit, read)..."
+echo "Adding sudoers rule for www-data (upload, delete, edit, read, restart asterisk)..."
 sudo tee /etc/sudoers.d/99-freeloader > /dev/null << 'EOF'
-www-data ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/mkdir, /bin/chown, /bin/chmod, /bin/cat
+www-data ALL=(ALL) NOPASSWD: /bin/cp, /bin/rm, /bin/mkdir, /bin/chown, /bin/chmod, /bin/cat, /bin/systemctl
 EOF
 sudo chmod 0440 /etc/sudoers.d/99-freeloader
 echo "Sudoers rule added successfully."
@@ -127,7 +127,7 @@ echo "Sudoers rule added successfully."
 echo
 echo "=================================================="
 echo " Freeloader installation completed successfully!"
-echo " Features: Upload, Download, Delete, Edit/Save"
+echo " Features: Upload, Download, Delete, Edit/Save, Restart Asterisk"
 echo " Editable: .ini .conf .php .sh .txt .cfg .json ..."
 echo " I hope you find this tool useful!"
 echo " 73 N5AD "
