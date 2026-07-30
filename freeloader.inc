@@ -24,11 +24,19 @@
     </div>
 
     <!-- File List -->
-    <div class="section" style="background: #ffffff; border: 2px solid #3498db; border-radius: 8px; padding: 20px;">
+    <div class="section" style="background: #ffffff; border: 2px solid #3498db; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
         <h3 style="color:#2980b9; margin-top:0;">Files in Selected Directory</h3>
         <div id="freeloader_filelist" style="max-height: 420px; overflow-y: auto; background:#f8f9fa; padding:10px; border: 1px solid #ddd; border-radius: 6px;">
             Loading files...
         </div>
+    </div>
+
+    <!-- System Controls (compact, bottom) -->
+    <div class="section" style="background: #ffffff; border: 1px solid #e67e22; border-radius: 6px; padding: 12px 18px; text-align: center;">
+        <button id="restart_asterisk_btn" style="padding:8px 18px; background:#e67e22; color:white; border:none; border-radius:4px; cursor:pointer; font-size:14px;">
+            Restart Asterisk
+        </button>
+        <div id="restart_status" style="margin-top:8px; font-weight:bold; font-size:13px;"></div>
     </div>
 </div>
 
@@ -54,6 +62,26 @@
 // Current file being edited
 var freeloaderEditFile = null;
 var freeloaderEditDir = null;
+
+// Restart Asterisk
+$("#restart_asterisk_btn").click(function() {
+    if (!confirm("WARNING: This will restart the Asterisk service.\n\nAll active connections will be dropped.\n\nAre you sure you want to continue?")) {
+        return;
+    }
+    $("#restart_status").text("Restarting Asterisk...").css("color", "orange");
+    $("#restart_asterisk_btn").prop("disabled", true);
+    $.post("/freeloader/freeloader_upload.php", {
+        action: "restart_asterisk"
+    }, function(response) {
+        $("#restart_asterisk_btn").prop("disabled", false);
+        let isSuccess = response.indexOf("SUCCESS") !== -1;
+        $("#restart_status").html(response).css("color", isSuccess ? "green" : "red");
+    }).fail(function(xhr) {
+        $("#restart_asterisk_btn").prop("disabled", false);
+        $("#restart_status").html("Restart failed. Check console / permissions.").css("color", "red");
+        console.error(xhr);
+    });
+});
 
 // Upload
 $("#freeloader_upload_btn").click(function() {
