@@ -38,5 +38,7 @@ sudo bash freeloader.sh
 ```
 you will be prompted to create a password that you will need to enter in order to use the utility. Once the utility is installed, you can find it at node[your node number].local/freeloader
 
+you can modify the directories that you will be working in. not all directories or folders are allowed initially. It is the users responsibility, no different than using cli in terminal, to not mess your node up. NOT all files will be editable but that is modifiable as well.
+
 
 
