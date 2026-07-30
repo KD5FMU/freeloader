@@ -41,7 +41,7 @@ if (!is_file($filepath)) {
 }
 
 
-// Try normal read
+
 
 if (is_readable($filepath)) {
 
@@ -68,7 +68,7 @@ if (is_readable($filepath)) {
 }
 
 
-// Fall back to helper for protected files
+
 
 [$ok, $content] = freeloader_helper('cat', [$filepath]);
 
