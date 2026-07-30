@@ -49,11 +49,7 @@
 set -euo pipefail
 
 
-# ----------------------------------------------------------------
 
-# Must be root
-
-# ----------------------------------------------------------------
 
 if [ "${EUID:-$(id -u)}" -ne 0 ]; then
 
@@ -111,11 +107,7 @@ echo "=================================================="
 echo
 
 
-# ----------------------------------------------------------------
 
-# Step 1 - Packages
-
-# ----------------------------------------------------------------
 
 echo "Step 1: Updating package list..."
 
@@ -127,11 +119,7 @@ echo "Step 2: Installing required packages..."
 apt-get install -y git php-cli apache2 2>/dev/null || apt-get install -y git php-cli
 
 
-# ----------------------------------------------------------------
 
-# Step 3 - Clone / update repository (ONLY source of files)
-
-# ----------------------------------------------------------------
 
 echo "Step 3: Fetching latest files from GitHub..."
 
@@ -211,11 +199,7 @@ fi
 echo "  All required files present."
 
 
-# ----------------------------------------------------------------
 
-# Step 4 - Directories & permissions
-
-# ----------------------------------------------------------------
 
 echo "Step 4: Creating directories..."
 
@@ -256,11 +240,7 @@ chmod 750 "${STATE_DIR}"
 rm -f "${UPLOAD_DIR}/.htaccess"
 
 
-# ----------------------------------------------------------------
 
-# Step 5 - Restricted helper (ONLY privileged binary)
-
-# ----------------------------------------------------------------
 
 echo "Step 5: Installing restricted helper..."
 
@@ -283,11 +263,7 @@ chown root:root "${HELPER_PATH}"
 echo "  Installed ${HELPER_PATH}"
 
 
-# ----------------------------------------------------------------
 
-# Step 6 - Web application files
-
-# ----------------------------------------------------------------
 
 echo "Step 6: Installing web application files..."
 
@@ -308,11 +284,7 @@ find "${WEB_DIR}" -type f -exec chmod 644 {} \;
 find "${WEB_DIR}" -type d -exec chmod 755 {} \;
 
 
-# ----------------------------------------------------------------
 
-# Step 7 - Password (bcrypt hash)
-
-# ----------------------------------------------------------------
 
 echo "Step 7: Setting Freeloader password (stored as bcrypt hash)..."
 
@@ -392,11 +364,7 @@ chown root:www-data "${CONFIG_DIR}/.config.php"
 echo "  Password hash written to ${CONFIG_DIR}/.config.php"
 
 
-# ----------------------------------------------------------------
 
-# Step 8 - Sudoers (helper ONLY)
-
-# ----------------------------------------------------------------
 
 echo "Step 8: Installing restricted sudoers rule..."
 
@@ -423,11 +391,7 @@ fi
 echo "  Sudoers rule installed and validated."
 
 
-# ----------------------------------------------------------------
 
-# Step 9 - Apache protection for upload directory
-
-# ----------------------------------------------------------------
 
 echo "Step 9: Configuring Apache protection for ${UPLOAD_DIR}..."
 
@@ -458,11 +422,7 @@ a2enconf freeloader-uploads >/dev/null 2>&1 || true
 echo "  Installed /etc/apache2/conf-available/freeloader-uploads.conf"
 
 
-# ----------------------------------------------------------------
 
-# Step 10 - Restart Apache
-
-# ----------------------------------------------------------------
 
 echo "Step 10: Restarting Apache..."
 
@@ -481,11 +441,7 @@ else
 fi
 
 
-# ----------------------------------------------------------------
 
-# Done
-
-# ----------------------------------------------------------------
 
 echo
 
@@ -509,8 +465,6 @@ echo
 
 echo " Security features:"
 
-echo "  - Files pulled only from GitHub"
-
 echo "  - Directory whitelist (see freeloader-helper + freeloader_common.php)"
 
 echo "  - Privileged ops only via locked-down helper"
@@ -527,21 +481,10 @@ echo "  - /my_uploads protected via Apache config"
 
 echo
 
-echo " Default allowed directories:"
-
-echo "   /my_uploads"
-
-echo "   /etc/asterisk"
-
-echo "   /etc/allmon3"
-
-echo "   /var/lib/asterisk"
-
-echo "   /var/www/html/supermon"
-
-echo
 
 echo " Access: http://YOUR-NODE/freeloader/"
+
+echo " It is my hope that you find good use for this"
 
 echo " 73 N5AD"
 
