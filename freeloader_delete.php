@@ -64,7 +64,7 @@ if (is_dir($path)) {
 }
 
 
-// Try helper first (works for protected paths)
+
 
 [$ok, $out] = freeloader_helper('rm', [$path]);
 
@@ -77,7 +77,7 @@ if ($ok) {
 }
 
 
-// Fallback for user-writable locations
+
 
 if (@unlink($path)) {
 
