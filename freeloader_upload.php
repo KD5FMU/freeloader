@@ -22,6 +22,22 @@ if (!isset($_SESSION['freeloader_loggedin'])) {
 $_SESSION['last_activity'] = time();
 
 // ==========================================================
+// Restart Asterisk
+// ==========================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'restart_asterisk') {
+    $cmd = "sudo systemctl restart asterisk 2>&1";
+    exec($cmd, $output, $returnCode);
+
+    if ($returnCode === 0) {
+        echo "<strong>SUCCESS:</strong> Asterisk service restarted successfully.";
+    } else {
+        $msg = htmlspecialchars(implode("\n", $output));
+        echo "Failed to restart Asterisk (exit code $returnCode).<br>" . ($msg ? $msg : "Check sudoers and that Asterisk is installed.");
+    }
+    exit;
+}
+
+// ==========================================================
 // File Listing
 // ==========================================================
 if (isset($_GET['action']) && $_GET['action'] === 'list') {
