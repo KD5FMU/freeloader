@@ -32,21 +32,13 @@ ALLOWED_DIRS=(
 
     "/var/www/html/supermon"
 
-    "/usr/local/bin"
-
     "/usr/share/allmon3"
 
     "/etc/allmon3"
 
-    "/var/www/html/freeloader"
-
     "/etc/asterisk/local"
 
     
-
-
-
-
 )
 
 
