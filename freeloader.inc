@@ -3,10 +3,8 @@
 // Standalone Freeloader - Upload + Download + Edit (hardened)
 // N5AD - July 2026
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
 require_once __DIR__ . '/freeloader_common.php';
+freeloader_bootstrap_session();
 $csrf = freeloader_csrf_token();
 ?>
 <div id="freeloader" style="background: #f8f9fa; border: 2px solid #2c3e50; border-radius: 10px; padding: 25px; margin-top: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
