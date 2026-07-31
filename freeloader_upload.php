@@ -43,14 +43,14 @@ if (isset($_GET['action']) && $_GET['action'] === 'list') {
     // Filename patterns for the Edit button (fnmatch, case-insensitive)
     // Examples: '*.ini', 'ini.*', 'rpt.conf*', '*.conf.bak'
     $editablePatterns = [
-        '*.ini', 'ini.*',
+        '*.ini', '*.ini.*',
         '*.conf', 'conf.*', '*.conf.*',
-        '*.php', '*.sh', '*.bash',
+        '*.php', '*.php.*', '*.sh', '*.sh.*',  '*.bash',
         '*.txt', '*.cfg', '*.json', '*.xml',
         '*.log', '*.md', '*.yml', '*.yaml',
-        '*.js', '*.css', '*.html', '*.htm',
+        '*.js', '*.css', '*.css.*',  '*.html', '*.htm',
         '*.c', '*.h', '*.py', '*.pl', '*.rb', '*.sql',
-        '*.env', '.htaccess', '*.htaccess',
+        '*.env', '*.bak.*', '*.example', *.inc.*',
         '*.service', '*.timer',
         '*.bak', '*.old', '*.dist', '*.sample', '*.tpl', '*.inc',
     ];
