@@ -38,7 +38,23 @@ sudo bash freeloader.sh
 ```
 you will be prompted to create a password that you will need to enter in order to use the utility. Once the utility is installed, you can find it at node[your node number].local/freeloader
 
-you can modify the directories that you will be working in. not all directories or folders are allowed initially. It is the users responsibility, no different than using cli in terminal, to not mess your node up. NOT all files will be editable but that is modifiable as well.
+## Allowed directories
+
+Only directories on the server whitelist can be browsed, uploaded to, edited, or deleted. Defaults (must match in both `freeloader_common.php` and `freeloader-helper.sh`):
+
+- `/my_uploads`
+- `/etc/asterisk`
+- `/etc/asterisk/local`
+- `/etc/allmon3`
+- `/var/lib/asterisk`
+- `/var/www/html/supermon`
+- `/usr/share/allmon3`
+
+`/usr/local/bin` and `/var/www/html/freeloader` are intentionally **not** allowed, so the privileged helper and the Freeloader app itself cannot be overwritten through the UI.
+
+To change the list: edit **both** files, then reinstall/copy the helper with the installer (or copy `freeloader-helper.sh` to `/usr/local/bin/freeloader-helper` as root). It is the operators responsibility [ no different than using the CLI ]not to damage the node.
+
+Not every file is editable in the UI (pattern-based).
 
 
 
