@@ -32,17 +32,11 @@ function freeloader_allowed_dirs(): array {
 
         '/var/www/html/supermon',
 
-	'/var/www/html/freeloader',
+	    '/etc/allmon3',
 
-	'/etc/allmon3',
+	    '/etc/asterisk/local',
 
-	'/etc/asterisk/local',
-
-	'/usr/share/allmon3',
-
-	'/usr/local/bin',
-
-
+	    '/usr/share/allmon3',
 
     ];
 
