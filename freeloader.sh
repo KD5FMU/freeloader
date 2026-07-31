@@ -266,13 +266,9 @@ echo "  Installed ${HELPER_PATH}"
 
 
 echo "Step 6: Installing web application files..."
-
 for f in freeloader.inc freeloader_common.php freeloader_upload.php freeloader_delete.php freeloader_download.php index.php; do
-
     cp "${REPO_DIR}/${f}" "${WEB_DIR}/"
-
-    echo "  + ${f}"
-
+    echo " + ${f}"
 done
 
 chown -R www-data:www-data "${WEB_DIR}"
