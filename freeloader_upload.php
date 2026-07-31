@@ -34,26 +34,47 @@ if (isset($_GET['action']) && $_GET['action'] === 'list') {
         exit;
     }
 
-    $files = @scandir($uploadDir);
-    if ($files === false) {
-        echo "<p style='color:red;'>Cannot read directory.</p>";
-        exit;
-    }
-
     // Filename patterns for the Edit button (fnmatch, case-insensitive)
-    // Examples: '*.ini', 'ini.*', 'rpt.conf*', '*.conf.bak'
     $editablePatterns = [
-        '*.ini', '*.ini.*',
+        '*.ini', 'ini.*',
         '*.conf', 'conf.*', '*.conf.*',
-        '*.php', '*.php.*', '*.sh', '*.sh.*',  '*.bash',
+        '*.php', '*.sh', '*.bash',
         '*.txt', '*.cfg', '*.json', '*.xml',
         '*.log', '*.md', '*.yml', '*.yaml',
-        '*.js', '*.css', '*.css.*',  '*.html', '*.htm',
+        '*.js', '*.css', '*.html', '*.htm',
         '*.c', '*.h', '*.py', '*.pl', '*.rb', '*.sql',
-        '*.env', '*.bak.*', '*.example', *.inc.*',
-        '*.service', '*.timer',
+        '*.env', '*.service', '*.timer',
         '*.bak', '*.old', '*.dist', '*.sample', '*.tpl', '*.inc',
     ];
+
+    // Build file rows: try native scandir first, fall back to helper ls
+    $entries = []; // each: [name, size_bytes, mtime_epoch]
+    $files = @scandir($uploadDir);
+    if ($files !== false) {
+        foreach ($files as $f) {
+            if ($f === '.' || $f === '..') continue;
+            if (isset($f[0]) && $f[0] === '.') continue;
+            $full = $uploadDir . '/' . $f;
+            if (!is_file($full)) continue;
+            $entries[] = [$f, @filesize($full) ?: 0, @filemtime($full) ?: time()];
+        }
+    } else {
+        // www-data cannot read this dir — use privileged helper
+        [$ok, $out] = freeloader_helper('ls', [$uploadDir]);
+        if (!$ok) {
+            echo "<p style='color:red;'>Cannot read directory. " . htmlspecialchars($out) . "</p>";
+            exit;
+        }
+        foreach (explode("\n", trim($out)) as $line) {
+            if ($line === '') continue;
+            $parts = explode("\t", $line);
+            $name = $parts[0] ?? '';
+            if ($name === '' || (isset($name[0]) && $name[0] === '.')) continue;
+            $sz = isset($parts[1]) ? (int)$parts[1] : 0;
+            $mt = isset($parts[2]) ? (int)$parts[2] : time();
+            $entries[] = [$name, $sz, $mt];
+        }
+    }
 
     echo '<table style="width:100%; border-collapse:collapse; font-size:14px;">';
     echo '<tr style="background:#34495e;color:white;">';
@@ -63,15 +84,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'list') {
     echo '<th style="padding:8px;">Action</th>';
     echo '</tr>';
 
-    foreach ($files as $f) {
-        if ($f === '.' || $f === '..') continue;
-        // Hide dotfiles (.htaccess, .htpasswd, .git, etc.)
-        if (isset($f[0]) && $f[0] === '.') continue;
-        $full = $uploadDir . '/' . $f;
-        if (is_dir($full)) continue;
-
-        $size = round(@filesize($full) / 1024, 2) . ' KB';
-        $mtime = date('Y-m-d H:i', @filemtime($full) ?: time());
+    foreach ($entries as [$f, $szBytes, $mtEpoch]) {
+        $size = round($szBytes / 1024, 2) . ' KB';
+        $mtime = date('Y-m-d H:i', $mtEpoch);
         $isEditable = false;
         foreach ($editablePatterns as $pat) {
             if (fnmatch($pat, $f, FNM_CASEFOLD)) {
