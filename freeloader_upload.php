@@ -95,18 +95,23 @@ if (isset($_GET['action']) && $_GET['action'] === 'list') {
             }
         }
         $safeName = htmlspecialchars($f, ENT_QUOTES, 'UTF-8');
-        $jsName = addslashes($f);
+        // json_encode() produces a valid, self-quoting JS string literal;
+        // htmlspecialchars() then makes it safe to embed inside the
+        // double-quoted onclick="..." attribute (handles filenames that
+        // contain a literal double quote, which would otherwise break out
+        // of the attribute regardless of JS-level escaping).
+        $jsName = htmlspecialchars(json_encode($f), ENT_QUOTES, 'UTF-8');
 
         echo "<tr style='border-bottom:1px solid #ddd;'>";
         echo "<td style='padding:8px; text-align:left;'>{$safeName}</td>";
         echo "<td style='padding:8px;text-align:right;'>{$size}</td>";
         echo "<td style='padding:8px;'>{$mtime}</td>";
         echo "<td style='padding:8px; white-space:nowrap;'>";
-        echo "<button onclick=\"downloadFreeloaderFile('{$jsName}')\" class='download-btn' style='background:#28a745;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;margin-right:5px;'>Download</button>";
+        echo "<button onclick=\"downloadFreeloaderFile({$jsName})\" class='download-btn' style='background:#28a745;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;margin-right:5px;'>Download</button>";
         if ($isEditable) {
-            echo "<button onclick=\"editFreeloaderFile('{$jsName}')\" class='edit-btn' style='background:#007bff;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;margin-right:5px;'>Edit</button>";
+            echo "<button onclick=\"editFreeloaderFile({$jsName})\" class='edit-btn' style='background:#007bff;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;margin-right:5px;'>Edit</button>";
         }
-        echo "<button onclick=\"deleteFreeloaderFile('{$jsName}')\" class='delete-btn' style='background:#dc3545;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;'>Delete</button>";
+        echo "<button onclick=\"deleteFreeloaderFile({$jsName})\" class='delete-btn' style='background:#dc3545;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;'>Delete</button>";
         echo "</td></tr>";
     }
     echo '</table>';
@@ -168,6 +173,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
         exit;
     }
 
+    if (in_array(strtolower($filename), ['.htaccess', '.htpasswd'], true)) {
+        echo 'Saving as ' . htmlspecialchars($filename) . ' is not allowed.';
+        exit;
+    }
+
     $path = $targetDir . '/' . $filename;
 
     // Write via temp file + helper (works for both normal and protected dirs)
@@ -215,15 +225,14 @@ if (($file['size'] ?? 0) > 50 * 1024 * 1024) {
     exit;
 }
 
-// Optional: restrict dangerous extensions that could be executed
-$dangerous = ['php','phtml','php3','php4','php5','php7','php8','phar','exe','htaccess'];
-$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-if (in_array($ext, $dangerous, true)) {
-    // Still allow if the target is not web-accessible, but warn / block by default for safety
-    // For ASL admin use we allow .php only into non-web dirs; simplest is to block pure web shells
-    // Comment the next two lines if you truly need to upload .php scripts
-    // echo 'Uploading executable PHP files is blocked for security.';
-    // exit;
+// Block Apache control files. These can silently change how a directory is
+// served (re-enable script execution, add/remove auth, override MIME types),
+// so they're blocked regardless of the target directory. Everything else
+// (.php, .sh, etc.) is intentionally allowed for experimenters.
+$blockedNames = ['.htaccess', '.htpasswd'];
+if (in_array(strtolower($filename), $blockedNames, true)) {
+    echo 'Uploading ' . htmlspecialchars($filename) . ' is not allowed.';
+    exit;
 }
 
 $targetDir = freeloader_validate_dir($_POST['target_dir'] ?? '/my_uploads');
