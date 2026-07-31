@@ -105,12 +105,45 @@ function freeloader_validate_filename(string $name): string|false {
 }
 
 /**
+ * True when the request arrived over HTTPS (direct or via reverse proxy).
+ */
+function freeloader_is_https(): bool {
+    if (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off') {
+        return true;
+    }
+    if (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443) {
+        return true;
+    }
+    if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+        strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Start session with hardened cookie flags (HttpOnly, SameSite=Strict,
+ * Secure when the request is HTTPS). Call instead of raw session_start().
+ */
+function freeloader_bootstrap_session(): void {
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return;
+    }
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path'     => '/',
+        'secure'   => freeloader_is_https(),
+        'httponly' => true,
+        'samesite' => 'Strict',
+    ]);
+    session_start();
+}
+
+/**
  * Require a valid logged-in session. Dies with 403 if not.
  */
 function freeloader_require_auth(): void {
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
+    freeloader_bootstrap_session();
     if (empty($_SESSION['freeloader_loggedin'])) {
         http_response_code(403);
         die('Access denied. Please log in.');
@@ -126,6 +159,7 @@ function freeloader_require_auth(): void {
 }
 
 function freeloader_csrf_token(): string {
+    freeloader_bootstrap_session();
     if (empty($_SESSION['freeloader_csrf'])) {
         $_SESSION['freeloader_csrf'] = bin2hex(random_bytes(32));
     }
@@ -133,6 +167,7 @@ function freeloader_csrf_token(): string {
 }
 
 function freeloader_verify_csrf(?string $token): bool {
+    freeloader_bootstrap_session();
     if (empty($token) || empty($_SESSION['freeloader_csrf'])) {
         return false;
     }
